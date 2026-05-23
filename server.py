@@ -2,7 +2,7 @@
     analysis to be executed over the Flask channel and deployed on
     localhost:5000.
 '''
-from flask import Flask
+from flask import Flask, render_template, request
 from EmotionDetection.emotion_detection import emotion_detecter
 
 app = Flask('Emotion Detector')
@@ -14,9 +14,15 @@ def sent_emotion():
         function. The output returned shows the label and its confidence 
         score for the provided text.
     '''
-    text_to_analyze = requests.args.get('textToAnalyze')
+    text_to_analyze = request.args.get('textToAnalyze')
+    print(text_to_analyze)
     response = emotion_detecter(text_to_analyze)
-    emotion = response['']
+    if response is None:
+        return "Invalid text! Please try again."
+    else:
+        formated = f'For the given statement, the system response is {response}. The dominant emotion is {response["dominant_emotion"]}'
+        return formated
+
 @app.route("/")
 def render_index_page():
     ''' This function initiates the rendering of the main application
