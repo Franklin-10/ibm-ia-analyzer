@@ -15,10 +15,17 @@ def sent_emotion():
     text_to_analyze = request.args.get('textToAnalyze')
     print(text_to_analyze)
     response = emotion_detector(text_to_analyze)
-    if response is None:
+    if response is None or response['dominant_emotion'] is None:
         return "Invalid text! Please try again."
-    formated = f"""'For the given statement, the system response is {response}.
-    The dominant emotion is {response["dominant_emotion"]}'"""
+
+    # 4. Formatação obrigatória contendo TODOS os scores individuais
+    formated = (
+        f"For the given statement, the system response is "
+        f"'anger': {response['anger']}, 'disgust': {response['disgust']}, "
+        f"'fear': {response['fear']}, 'joy': {response['joy']} and "
+        f"'sadness': {response['sadness']}. "
+        f"The dominant emotion is {response['dominant_emotion']}."
+    )
 
     return formated
 
